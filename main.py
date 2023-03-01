@@ -41,13 +41,24 @@ def auth_page():
 @app.route('/reg', methods=['GET', 'POST'])
 def reg_page():
     if request.method == 'POST':
+        temp_em: str = request.form.get('email')
+        temp_log: str = request.form.get('login')
+        temp_age: int = int(request.form.get('age'))
+        err = User.check_all(
+            temp_log,
+            users_data,
+            temp_age,
+            temp_em
+        ) 
+        if err != '':
+            return err
         user = User(
-            login=request.form.get('login'),
+            login=temp_log,
             password=request.form.get('password'),
-            email=request.form.get('email'),
+            email=temp_em,
             name=request.form.get('name'),
             surname=request.form.get('surname'),
-            age=request.form.get('age')
+            age=temp_age
         )
         users_data.append(user)
         return redirect('/auth')
